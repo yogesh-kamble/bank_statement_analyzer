@@ -417,6 +417,127 @@ class TestAIClients(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
+# 9. normalize_amount_with_sign (Format B)
+# ---------------------------------------------------------------------------
+
+class TestNormalizeAmountWithSign(unittest.TestCase):
+    def test_dr_sign_is_negative(self):
+        from parser import normalize_amount_with_sign
+        self.assertAlmostEqual(normalize_amount_with_sign("500.00", "Dr"), -500.00)
+
+    def test_cr_sign_is_positive(self):
+        from parser import normalize_amount_with_sign
+        self.assertAlmostEqual(normalize_amount_with_sign("10000.00", "Cr"), 10000.00)
+
+    def test_case_insensitive_sign(self):
+        from parser import normalize_amount_with_sign
+        self.assertAlmostEqual(normalize_amount_with_sign("300.00", "DR"), -300.00)
+        self.assertAlmostEqual(normalize_amount_with_sign("300.00", "CR"), 300.00)
+
+    def test_empty_sign_defaults_to_debit(self):
+        from parser import normalize_amount_with_sign
+        self.assertAlmostEqual(normalize_amount_with_sign("200.00", ""), -200.00)
+
+    def test_zero_amount_returns_zero(self):
+        from parser import normalize_amount_with_sign
+        self.assertAlmostEqual(normalize_amount_with_sign("0.00", "Dr"), 0.0)
+
+    def test_comma_formatted_amount(self):
+        from parser import normalize_amount_with_sign
+        self.assertAlmostEqual(normalize_amount_with_sign("1,23,456.00", "Dr"), -123456.00)
+
+
+# ---------------------------------------------------------------------------
+# 10. Credit Card CSV Parsing (Format B)
+# ---------------------------------------------------------------------------
+
+class TestCreditCardCSVParsing(unittest.TestCase):
+    def setUp(self):
+        self.csv_path = write_temp_csv(
+            rows=[
+                {"Date": "15/01/2024", "Sr.No.": "1", "Transaction Details": "SWIGGY ORDER",    "Reward Point Header": "", "Intl.Amount": "0", "Amount(in Rs)": "450.00",   "BillingAmountSign": "Dr"},
+                {"Date": "16/01/2024", "Sr.No.": "2", "Transaction Details": "AMAZON PURCHASE", "Reward Point Header": "", "Intl.Amount": "0", "Amount(in Rs)": "2999.00",  "BillingAmountSign": "Dr"},
+                {"Date": "17/01/2024", "Sr.No.": "3", "Transaction Details": "PAYMENT RECEIVED","Reward Point Header": "", "Intl.Amount": "0", "Amount(in Rs)": "10000.00", "BillingAmountSign": "Cr"},
+                {"Date": "18/01/2024", "Sr.No.": "4", "Transaction Details": "NETFLIX",         "Reward Point Header": "", "Intl.Amount": "0", "Amount(in Rs)": "649.00",   "BillingAmountSign": "Dr"},
+                {"Date": "19/01/2024", "Sr.No.": "5", "Transaction Details": "REFUND AMAZON",   "Reward Point Header": "", "Intl.Amount": "0", "Amount(in Rs)": "299.00",   "BillingAmountSign": "Cr"},
+            ],
+            headers=["Date", "Sr.No.", "Transaction Details", "Reward Point Header", "Intl.Amount", "Amount(in Rs)", "BillingAmountSign"],
+        )
+
+    def tearDown(self):
+        os.unlink(self.csv_path)
+
+    def test_correct_row_count(self):
+        txns = parse_icici_csv(self.csv_path)
+        self.assertEqual(len(txns), 5)
+
+    def test_dr_rows_are_negative(self):
+        txns = parse_icici_csv(self.csv_path)
+        swiggy = next(t for t in txns if "SWIGGY" in t.description)
+        self.assertAlmostEqual(swiggy.amount, -450.00)
+
+    def test_cr_rows_are_positive(self):
+        txns = parse_icici_csv(self.csv_path)
+        payment = next(t for t in txns if "PAYMENT" in t.description)
+        self.assertAlmostEqual(payment.amount, 10000.00)
+
+    def test_description_from_transaction_details(self):
+        txns = parse_icici_csv(self.csv_path)
+        descs = [t.description for t in txns]
+        self.assertIn("AMAZON PURCHASE", descs)
+
+    def test_balance_is_zero_for_credit_card(self):
+        """Credit card CSVs have no running balance column."""
+        txns = parse_icici_csv(self.csv_path)
+        self.assertTrue(all(t.balance == 0.0 for t in txns))
+
+    def test_filter_expenses_works_on_cc_format(self):
+        txns = parse_icici_csv(self.csv_path)
+        expenses = filter_expenses(txns)
+        # 3 Dr rows: SWIGGY, AMAZON, NETFLIX
+        self.assertEqual(len(expenses), 3)
+
+    def test_full_pipeline_on_cc_format(self):
+        txns = parse_icici_csv(self.csv_path)
+        result = analyze(txns)
+        # SWIGGY 450 + AMAZON 2999 + NETFLIX 649 = 4098
+        self.assertAlmostEqual(result.total_spend, 4098.00)
+
+    def test_credits_excluded_from_spend(self):
+        """PAYMENT RECEIVED and REFUND are Cr — should not count as spend."""
+        txns = parse_icici_csv(self.csv_path)
+        result = analyze(txns)
+        self.assertEqual(result.transaction_count, 3)
+
+
+# ---------------------------------------------------------------------------
+# 11. Format Auto-detection
+# ---------------------------------------------------------------------------
+
+class TestFormatDetection(unittest.TestCase):
+    def test_account_format_detected(self):
+        path = write_temp_csv([
+            {"DATE": "01/01/2024", "MODE": "UPI", "PARTICULARS": "SWIGGY", "WITHDRAWALS": "200", "DEPOSITS": "", "BALANCE": "9800"},
+        ])
+        try:
+            txns = parse_icici_csv(path)
+            self.assertAlmostEqual(txns[0].amount, -200.0)
+        finally:
+            os.unlink(path)
+
+    def test_creditcard_format_detected(self):
+        path = write_temp_csv(
+            rows=[{"Date": "01/01/2024", "Sr.No.": "1", "Transaction Details": "OLA RIDE", "Reward Point Header": "", "Intl.Amount": "0", "Amount(in Rs)": "150.00", "BillingAmountSign": "Dr"}],
+            headers=["Date", "Sr.No.", "Transaction Details", "Reward Point Header", "Intl.Amount", "Amount(in Rs)", "BillingAmountSign"],
+        )
+        try:
+            txns = parse_icici_csv(path)
+            self.assertAlmostEqual(txns[0].amount, -150.0)
+        finally:
+            os.unlink(path)
+
+
+# ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
 
