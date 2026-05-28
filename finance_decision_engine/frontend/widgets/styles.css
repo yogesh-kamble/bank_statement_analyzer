@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
+
+.container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    cursor: pointer;
+}
+
+#result {
+    margin-top: 24px;
+}
