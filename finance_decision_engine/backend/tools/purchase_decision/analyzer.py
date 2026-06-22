@@ -39,20 +39,26 @@ def analyze_purchase(
         stress_score=stress_score
     )
 
+    decision_score = max(0, 100 - stress_score)
+
+    emergency_runway_months = 0
+    savings_after_purchase = (
+            data.current_savings - data.purchase_amount
+    )
+    if data.monthly_expenses > 0:
+        emergency_runway_months = int(
+            savings_after_purchase / data.monthly_expenses
+        )
+
     return PurchaseDecisionResult(
         monthly_emi=emi,
-
-        emi_ratio=round(emi / data.monthly_income, 2),
-
-        savings_after_purchase=(
-            data.current_savings - data.purchase_amount
-        ),
+        savings_after_purchase=savings_after_purchase,
 
         stress_score=stress_score,
+        decision_score=decision_score,
+        emergency_runway_months=emergency_runway_months,
 
         decision=decision,
-
         insight=insight,
-
-        recommendation=recommendation
+        recommendation=recommendation,
     )

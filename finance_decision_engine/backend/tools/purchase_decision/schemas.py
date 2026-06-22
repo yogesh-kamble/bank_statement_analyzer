@@ -16,13 +16,14 @@ class PurchaseDecisionRequest(BaseModel):
 
 
 class PurchaseDecisionResponse(BaseModel):
-    monthly_emi: float
 
-    emi_ratio: float
+    monthly_emi: float
 
     savings_after_purchase: float
 
-    stress_score: int
+    decision_score: int
+
+    emergency_runway_months: int
 
     decision: str
 

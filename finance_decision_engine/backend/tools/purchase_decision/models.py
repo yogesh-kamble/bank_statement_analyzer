@@ -16,15 +16,12 @@ class PurchaseInput:
 @dataclass
 class PurchaseDecisionResult:
     monthly_emi: float
-
-    emi_ratio: float
-
     savings_after_purchase: float
 
     stress_score: int
+    decision_score: int
+    emergency_runway_months: int
 
     decision: str
-
     insight: str
-
     recommendation: str

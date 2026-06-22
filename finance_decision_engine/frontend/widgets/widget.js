@@ -1,3 +1,7 @@
+document
+    .getElementById("analyze-btn")
+    .addEventListener("click", analyzePurchase);
+
 async function analyzePurchase() {
 
     const payload = {
@@ -24,8 +28,39 @@ async function analyzePurchase() {
         annual_interest_rate: 12
     };
 
+    const expenses = parseFloat(
+        document.getElementById("expenses").value
+    );
+
+    const savings = parseFloat(
+        document.getElementById("savings").value
+    );
+
+    const purchase = parseFloat(
+        document.getElementById("purchase").value
+    );
+
+    if (!income || income <= 0) {
+        alert("Please enter valid monthly income.");
+        return;
+    }
+
+    if (!purchase || purchase <= 0) {
+        alert("Please enter valid purchase amount.");
+        return;
+    }
+
+    if (expenses < 0 || savings < 0) {
+        alert("Values cannot be negative.");
+        return;
+    }
+
+    try {
+
+    setLoading(true);
+
     const response = await fetch(
-        "http://127.0.0.1:8000/api/v1/purchase-decision/analyze",
+        `${CONFIG.API_BASE_URL}/api/v1/purchase-decision/analyze`,
         {
             method: "POST",
 
@@ -37,9 +72,28 @@ async function analyzePurchase() {
         }
     );
 
+    if (!response.ok) {
+        throw new Error("API request failed");
+    }
+
     const data = await response.json();
 
     renderResult(data);
+
+    } catch (error) {
+
+        document.getElementById("result").innerHTML = `
+            <div class="error-box">
+                Unable to analyze purchase.
+                Please try again later.
+            </div>
+        `;
+
+    } finally {
+
+        setLoading(false);
+
+    }
 }
 
 
@@ -131,4 +185,14 @@ function getDecisionBadge(decision) {
         default:
             return decision;
     }
+}
+
+function setLoading(isLoading) {
+    const btn = document.getElementById("analyze-btn");
+
+    btn.disabled = isLoading;
+
+    btn.innerText = isLoading
+        ? "Analyzing..."
+        : "Analyze Purchase";
 }
