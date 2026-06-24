@@ -18,36 +18,43 @@ router = APIRouter(
 )
 
 @router.post(
-    "/api/v1/purchase-decision/analyze",
+    "/analyze",
     response_model=PurchaseDecisionResponse
 )
 def analyze_purchase_decision(
     request: PurchaseDecisionRequest
 ):
-    data = PurchaseInput(
-        monthly_income=request.monthly_income,
 
-        monthly_expenses=request.monthly_expenses,
+    result = analyze_purchase(
+        PurchaseInput(
+            monthly_income=request.monthly_income,
+            monthly_expenses=request.monthly_expenses,
+            current_savings=request.current_savings,
 
-        current_savings=request.current_savings,
+            purchase_amount=request.purchase_amount,
 
-        purchase_amount=request.purchase_amount,
+            payment_mode=request.payment_mode,
 
-        emi_months=request.emi_months,
+            down_payment=request.down_payment,
 
-        annual_interest_rate=request.annual_interest_rate
+            emi_months=request.emi_months,
+
+            annual_interest_rate=request.annual_interest_rate
+        )
     )
 
-    result = analyze_purchase(data)
-
     return PurchaseDecisionResponse(
-        monthly_emi=result.monthly_emi,
-        savings_after_purchase=result.savings_after_purchase,
+        decision=result.decision,
 
         decision_score=result.decision_score,
+
+        headline=result.headline,
+
+        monthly_emi=result.monthly_emi,
+
         emergency_runway_months=result.emergency_runway_months,
 
-        decision=result.decision,
-        insight=result.insight,
-        recommendation=result.recommendation,
+        savings_remaining=result.savings_remaining,
+
+        recommendation=result.recommendation
     )

@@ -1,32 +1,65 @@
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const paymentMode =
+            document.getElementById(
+                "paymentMode"
+            );
+
+        const emiSection =
+            document.getElementById(
+                "emiSection"
+            );
+
+        function togglePaymentMode() {
+
+            if (
+                paymentMode.value === "cash"
+            ) {
+
+                emiSection.style.display =
+                    "none";
+
+            } else {
+
+                emiSection.style.display =
+                    "block";
+            }
+        }
+
+        paymentMode.addEventListener(
+            "change",
+            togglePaymentMode
+        );
+
+        togglePaymentMode();
+    }
+);
+
 document
     .getElementById("analyze-btn")
     .addEventListener("click", analyzePurchase);
 
+const paymentMode = document.getElementById("paymentMode");
+
+paymentMode.addEventListener("change", function () {
+
+    const emiSection =
+        document.getElementById("emiSection");
+
+    if (this.value === "cash") {
+        emiSection.style.display = "none";
+    } else {
+        emiSection.style.display = "block";
+    }
+});
+
 async function analyzePurchase() {
 
-    const payload = {
-        monthly_income: parseFloat(
-            document.getElementById("income").value
-        ),
-
-        monthly_expenses: parseFloat(
-            document.getElementById("expenses").value
-        ),
-
-        current_savings: parseFloat(
-            document.getElementById("savings").value
-        ),
-
-        purchase_amount: parseFloat(
-            document.getElementById("purchase").value
-        ),
-
-        emi_months: parseInt(
-            document.getElementById("months").value
-        ),
-
-        annual_interest_rate: 12
-    };
+    const income = parseFloat(
+        document.getElementById("income").value
+    );
 
     const expenses = parseFloat(
         document.getElementById("expenses").value
@@ -36,7 +69,7 @@ async function analyzePurchase() {
         document.getElementById("savings").value
     );
 
-    const purchase = parseFloat(
+    const purchaseAmount = parseFloat(
         document.getElementById("purchase").value
     );
 
@@ -45,7 +78,7 @@ async function analyzePurchase() {
         return;
     }
 
-    if (!purchase || purchase <= 0) {
+    if (!purchaseAmount || purchaseAmount <= 0) {
         alert("Please enter valid purchase amount.");
         return;
     }
@@ -55,32 +88,68 @@ async function analyzePurchase() {
         return;
     }
 
+    const payload = {
+        monthly_income: income,
+        monthly_expenses: expenses,
+        current_savings: savings,
+
+        purchase_amount: purchaseAmount,
+
+        payment_mode:
+            document.getElementById(
+                "paymentMode"
+            ).value,
+
+        down_payment:
+            Number(
+                document.getElementById(
+                    "downPayment"
+                )?.value || 0
+            ),
+
+        emi_months:
+            Number(
+                document.getElementById(
+                    "emiMonths"
+                )?.value || 12
+            ),
+
+        annual_interest_rate:
+            Number(
+                document.getElementById(
+                    "interestRate"
+                )?.value || 12
+            )
+    };
+
     try {
 
-    setLoading(true);
+        setLoading(true);
 
-    const response = await fetch(
-        `${CONFIG.API_BASE_URL}/api/v1/purchase-decision/analyze`,
-        {
-            method: "POST",
+        const response = await fetch(
+            `${CONFIG.API_BASE_URL}/api/v1/purchase-decision/analyze`,
+            {
+                method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            body: JSON.stringify(payload)
+                body: JSON.stringify(payload)
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("API request failed");
         }
-    );
 
-    if (!response.ok) {
-        throw new Error("API request failed");
-    }
+        const data = await response.json();
 
-    const data = await response.json();
-
-    renderResult(data);
+        renderResult(data);
 
     } catch (error) {
+
+        console.error(error);
 
         document.getElementById("result").innerHTML = `
             <div class="error-box">
@@ -96,17 +165,19 @@ async function analyzePurchase() {
     }
 }
 
-
 function renderResult(data) {
 
-    const meterColor =
-    data.stress_score >= 70
-        ? "#dc2626"
-        : data.stress_score >= 40
-        ? "#f59e0b"
-        : "#16a34a";
+    const score = data.decision_score || 0;
 
-    const badge = getDecisionBadge(data.decision);
+    const meterColor =
+        score >= 80
+            ? "#16a34a"
+            : score >= 60
+            ? "#f59e0b"
+            : "#dc2626";
+
+    const badge =
+        getDecisionBadge(data.decision);
 
     document.getElementById("result").innerHTML = `
         <div class="result-card">
@@ -114,56 +185,74 @@ function renderResult(data) {
             <div class="summary-grid">
 
                 <div class="summary-item">
-                    <div class="label">Monthly EMI</div>
-                    <div class="value">
-                        ₹${Math.round(data.monthly_emi).toLocaleString()}
-                    </div>
+                    <div class="label">Decision</div>
+                    <div class="value">${badge}</div>
                 </div>
 
                 <div class="summary-item">
-                    <div class="label">Savings Left</div>
+                    <div class="label">Monthly EMI</div>
                     <div class="value">
                         ₹${Math.round(
-                            data.savings_after_purchase
+                            data.monthly_emi || 0
                         ).toLocaleString()}
                     </div>
                 </div>
 
                 <div class="summary-item">
-                    <div class="label">Risk Level</div>
-                    <div class="value">${badge}</div>
+                    <div class="label">Emergency Runway</div>
+                    <div class="value">
+                        ${data.emergency_runway_months || 0}
+                        months
+                    </div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="label">
+                        Savings Remaining
+                    </div>
+                    <div class="value">
+                        ₹${Math.round(
+                            data.savings_remaining || 0
+                        ).toLocaleString()}
+                    </div>
                 </div>
 
             </div>
 
             <div class="stress-section">
 
-                <h3>Financial Stress Score</h3>
+                <h3>Purchase Decision Score</h3>
 
                 <div class="stress-meter">
+
                     <div
                         class="stress-fill"
                         style="
-                            width:${data.stress_score}%;
+                            width:${score}%;
                             background:${meterColor};
                         "
                     ></div>
+
                 </div>
 
                 <div class="score">
-                    ${data.stress_score}/100
+                    ${score}/100
                 </div>
 
             </div>
 
             <div class="insight-box">
-                <h3>Insight</h3>
-                <p>${data.insight}</p>
+                <h3>Assessment</h3>
+                <p>
+                    ${data.headline || ""}
+                </p>
             </div>
 
             <div class="recommendation-box">
                 <h3>Recommendation</h3>
-                <p>${data.recommendation}</p>
+                <p>
+                    ${data.recommendation || ""}
+                </p>
             </div>
 
         </div>
@@ -171,24 +260,31 @@ function renderResult(data) {
 }
 
 function getDecisionBadge(decision) {
-    switch (decision) {
 
-        case "safe":
+    switch (
+        (decision || "").toUpperCase()
+    ) {
+
+        case "SAFE":
             return "🟢 SAFE";
 
-        case "moderate":
+        case "MODERATE":
             return "🟠 MODERATE";
 
-        case "high_risk":
-            return "🔴 HIGH RISK";
+        case "RISKY":
+            return "🔴 RISKY";
 
         default:
-            return decision;
+            return decision || "N/A";
     }
 }
 
 function setLoading(isLoading) {
-    const btn = document.getElementById("analyze-btn");
+
+    const btn =
+        document.getElementById(
+            "analyze-btn"
+        );
 
     btn.disabled = isLoading;
 
