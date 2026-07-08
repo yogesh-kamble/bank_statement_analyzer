@@ -169,101 +169,216 @@ function renderResult(data) {
 
     const score = data.decision_score || 0;
 
-    const meterColor =
-        score >= 80
-            ? "#16a34a"
-            : score >= 60
-            ? "#f59e0b"
-            : "#dc2626";
+    let badgeClass = "safe";
 
-    const badge =
-        getDecisionBadge(data.decision);
+    if (score < 60) {
+
+        badgeClass = "high-risk";
+
+    } else if (score < 80) {
+
+        badgeClass = "moderate";
+
+    }
+
+    const emiRatio = data.emi_ratio || 0;
 
     document.getElementById("result").innerHTML = `
-        <div class="result-card">
 
-            <div class="summary-grid">
+    <div class="result-card">
 
-                <div class="summary-item">
-                    <div class="label">Decision</div>
-                    <div class="value">${badge}</div>
-                </div>
+        <h2>
 
-                <div class="summary-item">
-                    <div class="label">Monthly EMI</div>
-                    <div class="value">
-                        ₹${Math.round(
-                            data.monthly_emi || 0
-                        ).toLocaleString()}
-                    </div>
-                </div>
+            Purchase Analysis
 
-                <div class="summary-item">
-                    <div class="label">Emergency Runway</div>
-                    <div class="value">
-                        ${data.emergency_runway_months || 0}
-                        months
-                    </div>
-                </div>
+        </h2>
 
-                <div class="summary-item">
-                    <div class="label">
-                        Savings Remaining
-                    </div>
-                    <div class="value">
-                        ₹${Math.round(
-                            data.savings_remaining || 0
-                        ).toLocaleString()}
-                    </div>
-                </div>
+        <div style="text-align:center;margin-bottom:30px;">
 
-            </div>
+            <span class="badge ${badgeClass}">
 
-            <div class="stress-section">
+                ${getDecisionBadge(data.decision)}
 
-                <h3>Purchase Decision Score</h3>
+            </span>
 
-                <div class="stress-meter">
+        </div>
 
-                    <div
-                        class="stress-fill"
-                        style="
-                            width:${score}%;
-                            background:${meterColor};
-                        "
-                    ></div>
+        <div class="score-section">
 
-                </div>
+            <div class="score-header">
 
-                <div class="score">
+                <span>
+
+                    Purchase Decision Score
+
+                </span>
+
+                <strong>
+
                     ${score}/100
+
+                </strong>
+
+            </div>
+
+            <div class="score-bar">
+
+                <div
+
+                    class="score-fill ${badgeClass}"
+
+                    style="width:${score}%"
+
+                >
+
                 </div>
 
-            </div>
-
-            <div class="insight-box">
-                <h3>Assessment</h3>
-                <p>
-                    ${data.headline || ""}
-                </p>
-            </div>
-
-            <div class="recommendation-box">
-                <h3>Recommendation</h3>
-                <p>
-                    ${data.recommendation || ""}
-                </p>
             </div>
 
         </div>
+
+        <div class="summary-grid">
+
+            <div class="summary-item">
+
+                <div class="label">
+
+                    Monthly EMI
+
+                </div>
+
+                <div class="value">
+
+                    ₹${Math.round(
+
+                        data.monthly_emi || 0
+
+                    ).toLocaleString()}
+
+                </div>
+
+            </div>
+
+            <div class="summary-item">
+
+                <div class="label">
+
+                    EMI Ratio
+
+                </div>
+
+                <div class="value">
+
+                    ${emiRatio.toFixed(1)}%
+
+                </div>
+
+            </div>
+
+            <div class="summary-item">
+
+                <div class="label">
+
+                    Savings Remaining
+
+                </div>
+
+                <div class="value">
+
+                    ₹${Math.round(
+
+                        data.savings_remaining || 0
+
+                    ).toLocaleString()}
+
+                </div>
+
+            </div>
+
+            <div class="summary-item">
+
+                <div class="label">
+
+                    Emergency Runway
+
+                </div>
+
+                <div class="value">
+
+                    ${data.emergency_runway_months || 0}
+
+                    Months
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="analysis-grid">
+
+            <div class="analysis-card">
+
+                <h3>
+
+                    📊 Assessment
+
+                </h3>
+
+                <p>
+
+                    ${data.headline || ""}
+
+                </p>
+
+            </div>
+
+            <div class="analysis-card">
+
+                <h3>
+
+                    💡 Recommendation
+
+                </h3>
+
+                <p>
+
+                    ${data.recommendation || ""}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="tip-card">
+
+            <h3>
+
+                💰 Financial Tip
+
+            </h3>
+
+            <p>
+
+                Try to keep your total EMI below
+                <strong>30% of your monthly income</strong>.
+                Also maintain an emergency fund covering
+                at least <strong>6 months of expenses</strong>
+                before making large purchases.
+
+            </p>
+
+        </div>
+
+    </div>
+
     `;
 }
 
 function getDecisionBadge(decision) {
 
-    switch (
-        (decision || "").toUpperCase()
-    ) {
+    switch ((decision || "").toUpperCase()) {
 
         case "SAFE":
             return "🟢 SAFE";
@@ -272,7 +387,9 @@ function getDecisionBadge(decision) {
             return "🟠 MODERATE";
 
         case "RISKY":
-            return "🔴 RISKY";
+        case "HIGH_RISK":
+        case "HIGH RISK":
+            return "🔴 HIGH RISK";
 
         default:
             return decision || "N/A";
@@ -281,14 +398,11 @@ function getDecisionBadge(decision) {
 
 function setLoading(isLoading) {
 
-    const btn =
-        document.getElementById(
-            "analyze-btn"
-        );
+    const btn = document.getElementById("analyze-btn");
 
     btn.disabled = isLoading;
 
-    btn.innerText = isLoading
+    btn.innerHTML = isLoading
         ? "Analyzing..."
         : "Analyze Purchase";
 }

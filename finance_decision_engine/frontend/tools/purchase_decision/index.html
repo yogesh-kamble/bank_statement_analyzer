@@ -1,132 +1,426 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Purchase Decision Tool</title>
 
-    <link rel="stylesheet" href="styles.css">
+    <link
+        rel="stylesheet"
+        href="../../styles.css"
+    >
+
 </head>
 
 <body>
 
-<div class="container">
+<!-- ========================================= -->
+<!-- NAVBAR -->
+<!-- ========================================= -->
 
-    <h1>Purchase Decision Tool</h1>
+<header class="navbar">
 
-    <div class="form-group">
-        <label>Monthly Income</label>
-        <input
-            type="number"
-            id="income"
-            placeholder="250000"
-        >
-    </div>
+    <div class="container navbar-container">
 
-    <div class="form-group">
-        <label>Monthly Expenses</label>
-        <input
-            type="number"
-            id="expenses"
-            placeholder="180000"
-        >
-    </div>
+        <div class="logo">
 
-    <div class="form-group">
-        <label>Current Savings</label>
-        <input
-            type="number"
-            id="savings"
-            placeholder="4000000"
-        >
-    </div>
-
-    <div class="form-group">
-        <label>Purchase Amount</label>
-        <input
-            type="number"
-            id="purchase"
-            placeholder="1000000"
-        >
-    </div>
-
-    <div class="form-group">
-        <label>Payment Mode</label>
-
-        <select id="paymentMode">
-
-            <option value="cash">
-                Pay From Savings
-            </option>
-
-            <option value="emi">
-                EMI / Loan
-            </option>
-
-        </select>
-    </div>
-
-    <!-- EMI FIELDS -->
-
-    <div
-        id="emiSection"
-        style="display:none;"
-    >
-
-        <div class="form-group">
-
-            <label>Down Payment</label>
-
-            <input
-                type="number"
-                id="downPayment"
-                value="0"
-                placeholder="200000"
-            >
+            💰 Financial Decision Engine
 
         </div>
 
-        <div class="form-group">
+        <nav>
 
-            <label>EMI Months</label>
+            <a href="../../index.html">
+                Home
+            </a>
 
-            <input
-                type="number"
-                id="emiMonths"
-                value="12"
-                placeholder="12"
+            <a href="../../index.html#tools">
+                Tools
+            </a>
+
+            <a href="../../index.html#articles">
+                Articles
+            </a>
+
+            <a href="../../index.html#about">
+                About
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+<!-- ========================================= -->
+<!-- PAGE HEADER -->
+<!-- ========================================= -->
+
+<section class="page-header">
+
+    <div class="container">
+
+        <h1>
+
+            Purchase Decision Tool
+
+        </h1>
+
+        <p>
+
+            Evaluate whether your next purchase is financially
+            safe before you spend your hard-earned money.
+
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ========================================= -->
+<!-- INPUT FORM -->
+<!-- ========================================= -->
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="tool-card">
+
+            <h2>Financial Details</h2>
+
+                <p class="form-subtitle">
+                 Enter your monthly financial information below.
+            </p>
+
+            <!-- Income -->
+            <div class="form-grid">
+
+            <div class="form-group">
+
+                <label for="income">
+
+                    Monthly Income
+
+                </label>
+
+                <input
+                    id="income"
+                    type="number"
+                    placeholder="250000"
+                >
+
+            </div>
+
+            <!-- Expenses -->
+
+            <div class="form-group">
+
+                <label for="expenses">
+
+                    Monthly Expenses
+
+                </label>
+
+                <input
+                    id="expenses"
+                    type="number"
+                    placeholder="180000"
+                >
+
+            </div>
+
+            <!-- Savings -->
+
+            <div class="form-group">
+
+                <label for="savings">
+
+                    Current Savings
+
+                </label>
+
+                <input
+                    id="savings"
+                    type="number"
+                    placeholder="4000000"
+                >
+
+            </div>
+
+            <!-- Purchase -->
+
+            <div class="form-group">
+
+                <label for="purchase">
+
+                    Purchase Amount
+
+                </label>
+
+                <input
+                    id="purchase"
+                    type="number"
+                    placeholder="1000000"
+                >
+
+            </div>
+            </div>
+
+            <!-- Payment Mode -->
+
+            <div class="form-group">
+
+                <label for="paymentMode">
+
+                    Payment Mode
+
+                </label>
+
+                <select id="paymentMode">
+
+                    <option value="cash">
+
+                        Pay From Savings
+
+                    </option>
+
+                    <option value="emi">
+
+                        EMI / Loan
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- EMI SECTION -->
+
+            <div
+                id="emiSection"
+                style="display:none;"
             >
 
-        </div>
+                <div class="form-group">
 
-        <div class="form-group">
+                    <label for="downPayment">
 
-            <label>Interest Rate (%)</label>
+                        Down Payment
 
-            <input
-                type="number"
-                id="interestRate"
-                value="12"
-                placeholder="12"
+                    </label>
+
+                    <input
+                        id="downPayment"
+                        type="number"
+                        value="0"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="emiMonths">
+
+                        EMI Duration (Months)
+
+                    </label>
+
+                    <input
+                        id="emiMonths"
+                        type="number"
+                        value="12"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="interestRate">
+
+                        Annual Interest Rate (%)
+
+                    </label>
+
+                    <input
+                        id="interestRate"
+                        type="number"
+                        value="12"
+                    >
+
+                </div>
+
+            </div>
+
+            <button
+                id="analyze-btn"
+                class="primary-btn"
             >
+
+                Analyze Purchase
+
+            </button>
 
         </div>
 
     </div>
 
-    <button
-        id="analyze-btn"
-        onclick="analyzePurchase()"
-    >
-        Analyze Purchase
-    </button>
+</section>
 
-    <div id="result"></div>
+<!-- ========================================= -->
+<!-- RESULT -->
+<!-- ========================================= -->
 
-</div>
+<section class="section">
+
+    <div class="container">
+
+        <div
+            id="result"
+            class="result-card"
+        >
+
+            <h2>
+
+                Purchase Analysis
+
+            </h2>
+
+            <p class="empty-text">
+
+                Fill in your financial details above and click
+                <strong>Analyze Purchase</strong>.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ========================================= -->
+<!-- INFO -->
+<!-- ========================================= -->
+
+<section class="section light">
+
+    <div class="container">
+
+        <div class="info-card">
+
+            <h2>
+
+                What We Analyze
+
+            </h2>
+
+            <div class="feature-grid">
+
+                <div class="feature-item">
+
+                    <h3>
+
+                        💰 Affordability
+
+                    </h3>
+
+                    <p>
+
+                        Determines whether the purchase
+                        fits your current financial situation.
+
+                    </p>
+
+                </div>
+
+                <div class="feature-item">
+
+                    <h3>
+
+                        📊 Emergency Runway
+
+                    </h3>
+
+                    <p>
+
+                        Estimates how many months your
+                        savings can support your expenses.
+
+                    </p>
+
+                </div>
+
+                <div class="feature-item">
+
+                    <h3>
+
+                        📈 Financial Stress
+
+                    </h3>
+
+                    <p>
+
+                        Calculates a decision score based
+                        on income, savings and liabilities.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ========================================= -->
+<!-- FOOTER -->
+<!-- ========================================= -->
+
+<footer>
+
+    <div class="container footer-content">
+
+        <p>
+
+            <strong>
+
+                Financial Decision Engine
+
+            </strong>
+
+        </p>
+
+        <p>
+
+            Helping people make smarter financial decisions.
+
+        </p>
+
+        <p>
+
+            © 2026 Financial Decision Engine
+
+        </p>
+
+    </div>
+
+</footer>
 
 <script src="config.js"></script>
+
 <script src="widget.js"></script>
 
 </body>
+
 </html>

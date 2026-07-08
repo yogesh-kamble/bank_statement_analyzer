@@ -1,26 +1,1163 @@
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f8fafc;color:#0f172a;line-height:1.6}
-.navbar{display:flex;justify-content:space-between;align-items:center;padding:20px 8%;background:#fff;position:sticky;top:0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.logo{font-weight:bold;font-size:1.2rem;color:#2563eb}
-nav a{text-decoration:none;margin-left:24px;color:#334155}
-.hero{padding:90px 8%;text-align:center;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}
-.hero h1{font-size:3rem;max-width:850px;margin:auto}
-.hero p{margin:25px auto;max-width:700px;font-size:1.1rem}
-.btn{display:inline-block;background:#16a34a;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold}
-.secondary{background:#2563eb}
-.section{padding:70px 8%}
-.light{background:#fff}
-.section h2{text-align:center;margin-bottom:40px}
-.card{background:#fff;padding:30px;border-radius:12px;box-shadow:0 5px 18px rgba(0,0,0,.08);max-width:800px;margin:auto;text-align:center}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
-.feature{background:#fff;padding:24px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.steps{display:flex;justify-content:space-around;gap:20px;flex-wrap:wrap}
-.steps div{background:#2563eb;color:#fff;padding:20px;border-radius:10px;min-width:220px;text-align:center}
-.coming{max-width:500px;margin:auto;font-size:1.1rem}
-.coming li{margin:14px 0}
-footer{text-align:center;padding:40px;background:#0f172a;color:#fff}
+/* ======================================================
+   RESET
+====================================================== */
+
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* ======================================================
+   COLOR SYSTEM
+====================================================== */
+
+:root{
+
+    --primary:#2563EB;
+    --primary-dark:#1D4ED8;
+
+    --background:#F8FAFC;
+    --surface:#FFFFFF;
+
+    --text:#0F172A;
+    --muted:#64748B;
+
+    --border:#E2E8F0;
+
+    --shadow:
+        0 10px 25px rgba(15,23,42,.06);
+
+    --radius:14px;
+
+}
+
+/* ======================================================
+   BODY
+====================================================== */
+
+body{
+
+    font-family:
+
+        Inter,
+
+        "Segoe UI",
+
+        Arial,
+
+        sans-serif;
+
+    background:var(--background);
+
+    color:var(--text);
+
+    line-height:1.6;
+
+}
+
+/* ======================================================
+   LINKS
+====================================================== */
+
+a{
+
+    color:inherit;
+
+    text-decoration:none;
+
+}
+
+/* ======================================================
+   CONTAINER
+====================================================== */
+
+.container{
+
+    width:92%;
+
+    max-width:1180px;
+
+    margin:auto;
+
+}
+
+/* ======================================================
+   SECTIONS
+====================================================== */
+
+.section{
+
+    padding:70px 0;
+
+}
+
+.section-light{
+
+    background:white;
+
+}
+
+/* ======================================================
+   HEADINGS
+====================================================== */
+
+h1{
+
+    font-size:44px;
+
+    line-height:1.2;
+
+    margin-bottom:20px;
+
+}
+
+h2{
+
+    font-size:34px;
+
+    margin-bottom:14px;
+
+}
+
+h3{
+
+    font-size:22px;
+
+    margin-bottom:12px;
+
+}
+
+p{
+
+    color:var(--muted);
+
+    font-size:17px;
+
+}
+
+/* ======================================================
+   SECTION HEADER
+====================================================== */
+
+.section-header{
+
+    text-align:center;
+
+    margin-bottom:50px;
+
+}
+
+.section-header p{
+
+    max-width:700px;
+
+    margin:auto;
+
+}
+
+/* ======================================================
+   BUTTON
+====================================================== */
+
+.btn{
+
+    display:inline-block;
+
+    background:var(--primary);
+
+    color:white;
+
+    padding:
+
+        14px 28px;
+
+    border-radius:10px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.btn:hover{
+
+    background:var(--primary-dark);
+
+}
+
+/* ======================================================
+   NAVBAR
+====================================================== */
+
+.navbar{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:1000;
+
+    background:var(--surface);
+
+    border-bottom:1px solid var(--border);
+
+    box-shadow:
+
+        0 2px 12px rgba(15,23,42,.04);
+
+}
+
+/* ======================================================
+   NAVBAR LAYOUT
+====================================================== */
+
+.navbar-content{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    min-height:72px;
+
+    gap:24px;
+
+}
+
+/* ======================================================
+   LOGO
+====================================================== */
+
+.logo{
+
+    font-size:24px;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+    white-space:nowrap;
+
+}
+
+/* ======================================================
+   NAVIGATION
+====================================================== */
+
+.navbar nav{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:28px;
+
+}
+
+.navbar nav a{
+
+    color:var(--text);
+
+    font-size:16px;
+
+    font-weight:500;
+
+    padding:8px 0;
+
+    position:relative;
+
+    transition:color .2s ease;
+
+}
+
+.navbar nav a:hover{
+
+    color:var(--primary);
+
+}
+
+/* Underline animation */
+
+.navbar nav a::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    bottom:-2px;
+
+    width:0;
+
+    height:2px;
+
+    background:var(--primary);
+
+    transition:width .25s ease;
+
+}
+
+.navbar nav a:hover::after{
+
+    width:100%;
+
+}
+
+/* ======================================================
+   MOBILE NAVBAR
+====================================================== */
+
+@media (max-width:768px){
+
+    .navbar-content{
+
+        flex-direction:column;
+
+        justify-content:center;
+
+        padding:16px 0;
+
+    }
+
+    .logo{
+
+        font-size:22px;
+
+        text-align:center;
+
+    }
+
+    .navbar nav{
+
+        gap:18px;
+
+        flex-wrap:wrap;
+
+        justify-content:center;
+
+    }
+
+}
+/* ======================================================
+   HERO SECTION
+====================================================== */
+
+.hero{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #2563EB,
+            #1D4ED8
+        );
+
+    color:white;
+
+    padding:80px 0;
+
+}
+
+/* ======================================================
+   HERO CONTENT
+====================================================== */
+
+.hero-content{
+
+    max-width:760px;
+
+    text-align:center;
+
+    margin:auto;
+
+}
+
+/* ======================================================
+   HERO TITLE
+====================================================== */
+
+.hero h1{
+
+    color:white;
+
+    font-size:48px;
+
+    line-height:1.2;
+
+    margin-bottom:22px;
+
+    font-weight:700;
+
+}
+
+/* ======================================================
+   HERO DESCRIPTION
+====================================================== */
+
+.hero p{
+
+    color:
+
+        rgba(255,255,255,.92);
+
+    font-size:19px;
+
+    line-height:1.7;
+
+    margin-bottom:36px;
+
+}
+
+/* ======================================================
+   HERO BUTTON
+====================================================== */
+
+.hero .btn{
+
+    font-size:17px;
+
+    padding:
+
+        16px 34px;
+
+    background:white;
+
+    color:var(--primary);
+
+    font-weight:700;
+
+    border-radius:12px;
+
+    box-shadow:
+
+        0 8px 20px rgba(0,0,0,.12);
+
+}
+
+.hero .btn:hover{
+
+    background:#F8FAFC;
+
+    transform:translateY(-2px);
+
+}
+
+/* ======================================================
+   HERO RESPONSIVE
+====================================================== */
+
 @media(max-width:768px){
-.navbar{flex-direction:column;gap:12px}
-.hero h1{font-size:2rem}
-nav a{margin:0 10px}
+
+    .hero{
+
+        padding:60px 0;
+
+    }
+
+    .hero h1{
+
+        font-size:34px;
+
+    }
+
+    .hero p{
+
+        font-size:17px;
+
+    }
+
+    .hero .btn{
+
+        width:100%;
+
+        max-width:320px;
+
+    }
+
+}
+/* ======================================================
+   FEATURED TOOL
+====================================================== */
+
+.tool-card{
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    box-shadow:var(--shadow);
+
+    padding:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:40px;
+
+    transition:
+        transform .25s,
+        box-shadow .25s;
+
+}
+
+
+.tool-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+
+        0 18px 40px rgba(15,23,42,.10);
+
+}
+
+
+/* ======================================================
+   TOOL ICON
+====================================================== */
+
+.tool-icon{
+
+    width:90px;
+
+    height:90px;
+
+    min-width:90px;
+
+    border-radius:18px;
+
+    background:#EFF6FF;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:42px;
+
+}
+
+
+/* ======================================================
+   TOOL CONTENT
+====================================================== */
+
+.tool-content{
+
+    flex:1;
+
+}
+
+
+.tool-content h3{
+
+    font-size:28px;
+
+    color:var(--text);
+
+    margin-bottom:12px;
+
+}
+
+
+.tool-content p{
+
+    margin-bottom:22px;
+
+    max-width:620px;
+
+}
+
+
+/* ======================================================
+   FEATURES LIST
+====================================================== */
+
+.tool-features{
+
+    list-style:none;
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(2,minmax(0,1fr));
+
+    gap:12px 24px;
+
+}
+
+
+.tool-features li{
+
+    color:#334155;
+
+    font-size:15px;
+
+}
+
+
+/* ======================================================
+   ACTION
+====================================================== */
+
+.tool-action{
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media(max-width:900px){
+
+    .tool-card{
+
+        flex-direction:column;
+
+        text-align:center;
+
+    }
+
+    .tool-features{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+/* ======================================================
+   WHY CHOOSE US
+====================================================== */
+
+.feature-grid{
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(auto-fit,minmax(240px,1fr));
+
+    gap:28px;
+
+}
+
+
+/* ======================================================
+   FEATURE CARD
+====================================================== */
+
+.feature-card{
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:32px;
+
+    text-align:center;
+
+    box-shadow:var(--shadow);
+
+    transition:
+        transform .25s,
+        box-shadow .25s,
+        border-color .25s;
+
+}
+
+
+.feature-card:hover{
+
+    transform:translateY(-6px);
+
+    border-color:#BFDBFE;
+
+    box-shadow:
+
+        0 18px 35px rgba(37,99,235,.10);
+
+}
+
+
+/* ======================================================
+   FEATURE ICON
+====================================================== */
+
+.feature-icon{
+
+    width:72px;
+
+    height:72px;
+
+    margin:0 auto 22px;
+
+    border-radius:16px;
+
+    background:#EFF6FF;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:34px;
+
+}
+
+
+/* ======================================================
+   FEATURE TITLE
+====================================================== */
+
+.feature-card h3{
+
+    font-size:22px;
+
+    color:var(--text);
+
+    margin-bottom:14px;
+
+}
+
+
+/* ======================================================
+   FEATURE DESCRIPTION
+====================================================== */
+
+.feature-card p{
+
+    font-size:15px;
+
+    color:var(--muted);
+
+    line-height:1.7;
+
+}
+
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media(max-width:768px){
+
+    .feature-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+/* ======================================================
+   PRODUCT ROADMAP
+====================================================== */
+
+.roadmap-grid{
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(auto-fit,minmax(260px,1fr));
+
+    gap:28px;
+
+}
+
+
+/* ======================================================
+   ROADMAP CARD
+====================================================== */
+
+.roadmap-card{
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:30px;
+
+    box-shadow:var(--shadow);
+
+    transition:
+        transform .25s,
+        box-shadow .25s,
+        border-color .25s;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+.roadmap-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:#BFDBFE;
+
+    box-shadow:
+
+        0 18px 35px rgba(37,99,235,.08);
+
+}
+
+
+/* ======================================================
+   ROADMAP ICON
+====================================================== */
+
+.roadmap-icon{
+
+    width:64px;
+
+    height:64px;
+
+    border-radius:16px;
+
+    background:#EFF6FF;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:30px;
+
+    margin-bottom:20px;
+
+}
+
+
+/* ======================================================
+   ROADMAP TITLE
+====================================================== */
+
+.roadmap-card h3{
+
+    font-size:22px;
+
+    margin-bottom:14px;
+
+    color:var(--text);
+
+}
+
+
+/* ======================================================
+   ROADMAP DESCRIPTION
+====================================================== */
+
+.roadmap-card p{
+
+    flex:1;
+
+    font-size:15px;
+
+    line-height:1.7;
+
+    color:var(--muted);
+
+}
+
+
+/* ======================================================
+   COMING SOON BADGE
+====================================================== */
+
+.coming-badge{
+
+    display:inline-block;
+
+    margin-top:24px;
+
+    align-self:flex-start;
+
+    padding:
+
+        8px 16px;
+
+    border-radius:999px;
+
+    background:#DBEAFE;
+
+    color:var(--primary);
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+
+/* ======================================================
+   ROADMAP RESPONSIVE
+====================================================== */
+
+@media(max-width:768px){
+
+    .roadmap-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+/* ======================================================
+   FOOTER
+====================================================== */
+
+footer{
+
+    margin-top:80px;
+
+    background:#0F172A;
+
+    color:#CBD5E1;
+
+    padding:50px 0;
+
+}
+
+.footer-content{
+
+    text-align:center;
+
+    max-width:700px;
+
+    margin:auto;
+
+}
+
+.footer-content h3{
+
+    color:white;
+
+    font-size:24px;
+
+    margin-bottom:12px;
+
+}
+
+.footer-content p{
+
+    color:#CBD5E1;
+
+    margin-bottom:10px;
+
+}
+
+.footer-links{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:24px;
+
+    margin:25px 0;
+
+    flex-wrap:wrap;
+
+}
+
+.footer-links a{
+
+    color:#CBD5E1;
+
+    transition:color .2s;
+
+}
+
+.footer-links a:hover{
+
+    color:white;
+
+}
+
+.footer-bottom{
+
+    margin-top:25px;
+
+    padding-top:20px;
+
+    border-top:1px solid rgba(255,255,255,.1);
+
+    font-size:14px;
+
+    color:#94A3B8;
+
+}
+
+
+/* ======================================================
+   SMOOTH SCROLL
+====================================================== */
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+
+/* ======================================================
+   TEXT SELECTION
+====================================================== */
+
+::selection{
+
+    background:#2563EB;
+
+    color:white;
+
+}
+
+
+/* ======================================================
+   ACCESSIBILITY
+====================================================== */
+
+button:focus,
+a:focus,
+input:focus,
+select:focus{
+
+    outline:3px solid rgba(37,99,235,.25);
+
+    outline-offset:2px;
+
+}
+
+
+/* ======================================================
+   IMAGE SAFETY
+====================================================== */
+
+img{
+
+    max-width:100%;
+
+    display:block;
+
+}
+
+
+/* ======================================================
+   SMALL TRANSITIONS
+====================================================== */
+
+button,
+a,
+input,
+select,
+.card,
+.feature-card,
+.tool-card,
+.roadmap-card{
+
+    transition:
+
+        all .25s ease;
+
+}
+
+
+/* ======================================================
+   MOBILE
+====================================================== */
+
+@media(max-width:768px){
+
+    h1{
+
+        font-size:34px;
+
+    }
+
+    h2{
+
+        font-size:28px;
+
+    }
+
+    h3{
+
+        font-size:20px;
+
+    }
+
+    p{
+
+        font-size:16px;
+
+    }
+
+    .section{
+
+        padding:55px 0;
+
+    }
+
+    .tool-card,
+    .feature-card,
+    .roadmap-card{
+
+        padding:24px;
+
+    }
+
+    .btn{
+
+        width:100%;
+
+        text-align:center;
+
+    }
+
+    .container{
+
+        width:94%;
+
+    }
+
+}
+
+
+/* ======================================================
+   LARGE DESKTOP
+====================================================== */
+
+@media(min-width:1400px){
+
+    .container{
+
+        max-width:1280px;
+
+    }
+
 }
