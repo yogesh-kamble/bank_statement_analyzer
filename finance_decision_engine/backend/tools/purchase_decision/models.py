@@ -34,3 +34,5 @@ class PurchaseDecisionResult:
     savings_remaining: float
 
     recommendation: str
+
+    monthly_surplus_after_emi: float

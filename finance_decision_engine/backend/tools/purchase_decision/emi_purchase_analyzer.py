@@ -149,5 +149,9 @@ def analyze_emi_purchase(
             "Ensure the new EMI can be comfortably "
             "paid from your existing monthly surplus "
             "while maintaining an adequate emergency fund."
+        ),
+        monthly_surplus_after_emi=round(
+            monthly_surplus_after_emi,
+            2
         )
     )

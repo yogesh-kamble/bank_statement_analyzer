@@ -33,3 +33,5 @@ class PurchaseDecisionResponse(BaseModel):
     savings_remaining: float
 
     recommendation: str
+
+    monthly_surplus_after_emi: float

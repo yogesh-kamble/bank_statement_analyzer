@@ -313,6 +313,20 @@ function renderResult(data) {
 
             </div>
 
+            <div class="summary-item">
+
+                <div class="label">
+                    Monthly Surplus After EMI
+                </div>
+
+                <div class="value">
+                    ₹${Math.round(
+                        data.monthly_surplus_after_emi || 0
+                    ).toLocaleString()}
+                </div>
+
+            </div>
+
         </div>
 
         <div class="analysis-grid">

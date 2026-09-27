@@ -56,5 +56,7 @@ def analyze_purchase_decision(
 
         savings_remaining=result.savings_remaining,
 
-        recommendation=result.recommendation
+        recommendation=result.recommendation,
+
+        monthly_surplus_after_emi=result.monthly_surplus_after_emi
     )

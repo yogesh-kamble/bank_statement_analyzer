@@ -309,6 +309,174 @@ p{
 }
 
 /* ======================================================
+   ARTICLES
+====================================================== */
+
+.article-card {
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    box-shadow: var(--shadow);
+
+    padding: 36px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 40px;
+
+    transition:
+        transform .25s,
+        box-shadow .25s,
+        border-color .25s;
+}
+
+
+.article-card:hover {
+
+    transform: translateY(-4px);
+
+    border-color: #BFDBFE;
+
+    box-shadow:
+        0 18px 40px
+        rgba(15, 23, 42, .10);
+}
+
+
+.article-card-content {
+
+    flex: 1;
+
+    max-width: 760px;
+}
+
+
+.article-category {
+
+    display: inline-block;
+
+    margin-bottom: 12px;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    background: #EFF6FF;
+
+    color: var(--primary);
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.article-card h3 {
+
+    font-size: 26px;
+
+    color: var(--text);
+
+    margin-bottom: 12px;
+}
+
+
+.article-card p {
+
+    font-size: 16px;
+
+    line-height: 1.7;
+
+    margin-bottom: 20px;
+}
+
+
+.article-link {
+
+    color: var(--primary);
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    transition: color .2s ease;
+}
+
+
+.article-link:hover {
+
+    color: var(--primary-dark);
+}
+
+
+.article-card-icon {
+
+    width: 90px;
+
+    height: 90px;
+
+    min-width: 90px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #EFF6FF;
+
+    border-radius: 18px;
+
+    font-size: 42px;
+}
+
+
+/* ======================================================
+   ARTICLES RESPONSIVE
+====================================================== */
+
+@media (max-width: 768px) {
+
+    .article-card {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        padding: 28px;
+
+        gap: 24px;
+    }
+
+
+    .article-card-icon {
+
+        width: 70px;
+
+        height: 70px;
+
+        min-width: 70px;
+
+        font-size: 32px;
+    }
+
+
+    .article-card h3 {
+
+        font-size: 22px;
+    }
+
+}
+
+/* ======================================================
    MOBILE NAVBAR
 ====================================================== */
 
