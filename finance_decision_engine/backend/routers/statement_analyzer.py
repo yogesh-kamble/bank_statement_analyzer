@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File
 import shutil
 import os
+import uuid
 from backend.tools.statement_analyzer.analyzer import analyze_statement
 
 router = APIRouter(
@@ -8,15 +9,20 @@ router = APIRouter(
     tags=["Statement Analyzer"]
 )
 
+# Plain `def` so FastAPI runs it in a threadpool (the OpenAI call is blocking).
 @router.post("/analyze-statement")
-async def analyze(file: UploadFile = File(...)):
-    file_path = f"temp_{file.filename}"
+def analyze(
+    file: UploadFile = File(...),
+    explain: bool = True
+):
+    file_path = f"temp_{uuid.uuid4().hex}_{os.path.basename(file.filename or 'statement')}"
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    result = analyze_statement(file_path, bank="icici")
-
-    os.remove(file_path)
-
-    return result
+    try:
+        return analyze_statement(
+            file_path, bank="icici", explain=explain
+        )
+    finally:
+        os.remove(file_path)

@@ -1,7 +1,7 @@
 # backend/tools/purchase_decision/schemas.py
 
 from pydantic import BaseModel
-from typing import Literal
+from typing import List, Literal, Optional
 
 
 class PurchaseDecisionRequest(BaseModel):
@@ -17,6 +17,18 @@ class PurchaseDecisionRequest(BaseModel):
 
     emi_months: int = 12
     annual_interest_rate: float = 12.0
+
+    # Set false to skip the AI explanation (saves latency/cost)
+    include_ai_explanation: bool = True
+
+
+class AIExplanationSchema(BaseModel):
+    summary: str
+    key_points: List[str] = []
+    risks: List[str] = []
+    suggestions: List[str] = []
+    source: Literal["ai", "fallback"]
+    model: Optional[str] = None
 
 
 class PurchaseDecisionResponse(BaseModel):
@@ -35,3 +47,7 @@ class PurchaseDecisionResponse(BaseModel):
     recommendation: str
 
     monthly_surplus_after_emi: float
+
+    emi_ratio: float = 0.0
+
+    ai_explanation: Optional[AIExplanationSchema] = None

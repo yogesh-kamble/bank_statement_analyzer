@@ -153,5 +153,19 @@ def analyze_emi_purchase(
         monthly_surplus_after_emi=round(
             monthly_surplus_after_emi,
             2
-        )
+        ),
+
+        emi_ratio=round(
+            (emi / data.monthly_income) * 100, 1
+        ),
+        loan_amount=round(loan_amount, 2),
+        total_repayment=round(emi * data.emi_months, 2),
+        total_interest=round(
+            emi * data.emi_months - loan_amount, 2
+        ),
+        emi_coverage_ratio=(
+            round(coverage_ratio, 2)
+            if coverage_ratio != float("inf") else 0.0
+        ),
+        monthly_surplus=round(monthly_surplus, 2)
     )

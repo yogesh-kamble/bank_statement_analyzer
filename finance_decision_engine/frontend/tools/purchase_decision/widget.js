@@ -365,6 +365,8 @@ function renderResult(data) {
 
         </div>
 
+        ${renderAIExplanation(data.ai_explanation)}
+
         <div class="tip-card">
 
             <h3>
@@ -387,6 +389,55 @@ function renderResult(data) {
 
     </div>
 
+    `;
+}
+
+function escapeHtml(value) {
+
+    const div = document.createElement("div");
+
+    div.textContent = value == null ? "" : String(value);
+
+    return div.innerHTML;
+}
+
+function renderList(items) {
+
+    if (!items || !items.length) return "";
+
+    return "<ul>" + items.map(
+        (item) => `<li>${escapeHtml(item)}</li>`
+    ).join("") + "</ul>";
+}
+
+function renderAIExplanation(ai) {
+
+    if (!ai) return "";
+
+    const label = ai.source === "ai"
+        ? "🤖 AI Explanation"
+        : "📝 Explanation";
+
+    const risks = (ai.risks && ai.risks.length)
+        ? `<h4>Risks</h4>${renderList(ai.risks)}`
+        : "";
+
+    const suggestions = (ai.suggestions && ai.suggestions.length)
+        ? `<h4>What you can do</h4>${renderList(ai.suggestions)}`
+        : "";
+
+    return `
+        <div class="ai-card">
+            <h3>${label}</h3>
+            <p>${escapeHtml(ai.summary)}</p>
+            ${renderList(ai.key_points)}
+            ${risks}
+            ${suggestions}
+            <p class="ai-note">
+                All figures are calculated by our engine.
+                ${ai.source === "ai" ? "AI only explains them." : ""}
+            </p>
+        </div>
     `;
 }
 

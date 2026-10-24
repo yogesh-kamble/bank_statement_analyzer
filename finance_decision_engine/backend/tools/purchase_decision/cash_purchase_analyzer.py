@@ -36,5 +36,12 @@ def analyze_cash_purchase(
 
         savings_remaining=savings_remaining,
 
-        recommendation="Maintain at least 6 months emergency fund."
+        recommendation="Maintain at least 6 months emergency fund.",
+
+        monthly_surplus_after_emi=round(
+            data.monthly_income - data.monthly_expenses, 2
+        ),
+        monthly_surplus=round(
+            data.monthly_income - data.monthly_expenses, 2
+        )
     )
