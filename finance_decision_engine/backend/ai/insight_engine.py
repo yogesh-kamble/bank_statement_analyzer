@@ -4,9 +4,18 @@ from backend.ai.models import InsightResult
 def generate_insight(data: dict) -> InsightResult:
     total_spend = data.get("total_spend", 0)
 
-    category_totals = data.get("category_totals", {})
+    # aggregator emits merchant_totals (older callers may pass category_totals)
+    category_totals = {
+        k: v
+        for k, v in (
+            data.get("category_totals")
+            or data.get("merchant_totals")
+            or {}
+        ).items()
+        if k != "unknown"
+    }
 
-    if not category_totals:
+    if not category_totals or total_spend <= 0:
         return InsightResult(
             insight="No spending patterns detected.",
             suggestion="Use the app regularly to improve financial insights."

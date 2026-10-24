@@ -12,6 +12,9 @@ from backend.tools.purchase_decision.analyzer import (
     analyze_purchase
 )
 
+from backend.ai.explainer import explain_purchase
+from dataclasses import asdict
+
 router = APIRouter(
     prefix="/api/v1/purchase-decision",
     tags=["Purchase Decision"]
@@ -25,8 +28,7 @@ def analyze_purchase_decision(
     request: PurchaseDecisionRequest
 ):
 
-    result = analyze_purchase(
-        PurchaseInput(
+    purchase_input = PurchaseInput(
             monthly_income=request.monthly_income,
             monthly_expenses=request.monthly_expenses,
             current_savings=request.current_savings,
@@ -40,7 +42,16 @@ def analyze_purchase_decision(
             emi_months=request.emi_months,
 
             annual_interest_rate=request.annual_interest_rate
-        )
+    )
+
+    # 1. Engine computes every number and the verdict
+    result = analyze_purchase(purchase_input)
+
+    # 2. AI only explains the finished result (never calculates)
+    explanation = (
+        explain_purchase(purchase_input, result)
+        if request.include_ai_explanation
+        else None
     )
 
     return PurchaseDecisionResponse(
@@ -58,5 +69,9 @@ def analyze_purchase_decision(
 
         recommendation=result.recommendation,
 
-        monthly_surplus_after_emi=result.monthly_surplus_after_emi
+        monthly_surplus_after_emi=result.monthly_surplus_after_emi,
+
+        emi_ratio=result.emi_ratio,
+
+        ai_explanation=asdict(explanation) if explanation else None
     )
