@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Financial Decision Engine - Purchase Check",
+  "version": "0.1.0",
+  "description": "Check whether you can afford the product you are viewing on Amazon.in, using your locally saved financial profile and the FDE engine.",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": [
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "FDE - Check affordability"
+  }
+}

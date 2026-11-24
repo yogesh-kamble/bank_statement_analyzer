@@ -1,0 +1,6 @@
+{
+  "name": "fde-extension-tests",
+  "private": true,
+  "scripts": { "test": "node --test" },
+  "devDependencies": { "jsdom": "^24.0.0" }
+}

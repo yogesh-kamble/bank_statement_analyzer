@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FDE - Purchase Check</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+<header class="app-header">
+  <span class="logo" aria-hidden="true">💰</span>
+  <div>
+    <h1>Financial Decision Engine</h1>
+    <p class="tagline">Can you afford this purchase?</p>
+  </div>
+</header>
+
+<main>
+
+  <div id="status" class="status" role="status" aria-live="polite" hidden></div>
+
+  <!-- ===================== PRODUCT + PAYMENT ===================== -->
+  <form id="purchase-form" class="card" novalidate>
+    <div class="card-head">
+      <h2>Product</h2>
+      <button type="button" id="detect-btn" class="btn btn-secondary btn-small">Detect from page</button>
+    </div>
+
+    <div class="field">
+      <label for="product-title">Title</label>
+      <input id="product-title" type="text" maxlength="200" autocomplete="off"
+             placeholder="Detected automatically, or type it">
+    </div>
+
+    <div class="field">
+      <label for="product-price">Price (₹)</label>
+      <input id="product-price" type="text" inputmode="decimal" autocomplete="off"
+             placeholder="e.g. 60000 or 1,29,999" aria-describedby="err-product-price detect-note">
+      <p id="err-product-price" class="field-error" hidden></p>
+      <p id="detect-note" class="note" hidden></p>
+    </div>
+
+    <h2 class="spaced">Payment</h2>
+
+    <div class="field">
+      <label for="payment-mode">Payment method</label>
+      <select id="payment-mode">
+        <option value="cash">Cash (pay in full from savings)</option>
+        <option value="emi">EMI (loan)</option>
+      </select>
+    </div>
+
+    <div id="emi-fields" hidden>
+      <div class="field">
+        <label for="down-payment">Down payment (₹) - enter 0 if none</label>
+        <input id="down-payment" type="text" inputmode="decimal" autocomplete="off"
+               aria-describedby="err-down-payment">
+        <p id="err-down-payment" class="field-error" hidden></p>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="emi-months">EMI months</label>
+          <input id="emi-months" type="text" inputmode="numeric" autocomplete="off"
+                 placeholder="e.g. 12" aria-describedby="err-emi-months">
+          <p id="err-emi-months" class="field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="emi-rate">Interest (% / year)</label>
+          <input id="emi-rate" type="text" inputmode="decimal" autocomplete="off"
+                 placeholder="e.g. 12" aria-describedby="err-emi-rate">
+          <p id="err-emi-rate" class="field-error" hidden></p>
+        </div>
+      </div>
+    </div>
+
+    <label class="check">
+      <input id="include-ai" type="checkbox" checked>
+      <span>Include AI explanation</span>
+    </label>
+
+    <button type="submit" id="check-btn" class="btn btn-primary">Check affordability</button>
+  </form>
+
+  <!-- ===================== RESULTS ===================== -->
+  <section id="results" class="card" aria-labelledby="results-h" hidden></section>
+  <section id="ai-section" class="card ai" aria-labelledby="ai-h" hidden></section>
+
+  <!-- ===================== PROFILE ===================== -->
+  <details id="profile-details" class="card">
+    <summary>
+      <span>Your financial profile</span>
+      <span id="profile-badge" class="badge-pill">Not set up</span>
+    </summary>
+
+    <form id="profile-form" novalidate>
+      <p class="note">
+        Stored only in this browser (<code>chrome.storage.local</code>) on this device.
+        It is not encrypted by the extension, is not uploaded for storage, and is sent to
+        the FDE service only when you press “Check affordability”.
+      </p>
+
+      <div class="field">
+        <label for="p-income">Monthly income (₹)</label>
+        <input id="p-income" type="text" inputmode="decimal" autocomplete="off" aria-describedby="err-p-income">
+        <p id="err-p-income" class="field-error" hidden></p>
+      </div>
+      <div class="field">
+        <label for="p-expenses">Monthly expenses (₹)</label>
+        <input id="p-expenses" type="text" inputmode="decimal" autocomplete="off" aria-describedby="err-p-expenses">
+        <p id="err-p-expenses" class="field-error" hidden></p>
+      </div>
+      <div class="field">
+        <label for="p-savings">Current savings (₹)</label>
+        <input id="p-savings" type="text" inputmode="decimal" autocomplete="off" aria-describedby="err-p-savings">
+        <p id="err-p-savings" class="field-error" hidden></p>
+      </div>
+
+      <p class="note">Optional EMI defaults (pre-fill the EMI fields):</p>
+      <div class="row">
+        <div class="field">
+          <label for="p-emi-months">EMI months</label>
+          <input id="p-emi-months" type="text" inputmode="numeric" autocomplete="off" aria-describedby="err-p-emi-months">
+          <p id="err-p-emi-months" class="field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="p-emi-rate">Interest (% / year)</label>
+          <input id="p-emi-rate" type="text" inputmode="decimal" autocomplete="off" aria-describedby="err-p-emi-rate">
+          <p id="err-p-emi-rate" class="field-error" hidden></p>
+        </div>
+      </div>
+
+      <div class="row buttons">
+        <button type="submit" id="save-profile-btn" class="btn btn-primary">Save profile</button>
+        <button type="button" id="clear-profile-btn" class="btn btn-secondary">Clear saved profile</button>
+      </div>
+    </form>
+  </details>
+
+</main>
+
+<footer>
+  <p>Numbers are calculated by the FDE engine; AI only explains them. Not financial advice.</p>
+  <p id="api-info" class="muted"></p>
+</footer>
+
+<script src="config.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>
